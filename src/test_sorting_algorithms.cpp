@@ -5,9 +5,9 @@
 #include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms\insertsort.h"
 #include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms\heapsort.h"
 #include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms\mergesort.h"
-#include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms\shellsort.h"
-#include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms\quicksort.h"
-#include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms\introsort.h"
+#include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms/shellsort.h"
+#include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms/quicksort.h"
+#include "C:\Users\dru-b\OneDrive\Pulpit\PiAASortowanie\include\algorithms/introsort.h"
 
 using namespace std::string_literals;
 
@@ -84,7 +84,7 @@ TEST_CASE("QuickSort")
     auto resultData = getSortedData();
 
     QuickSort<int> quickSort;
-    quickSort.sort(data.begin(),data.end());
+    quickSort.sort(data, 0, data.size() - 1);
 
     REQUIRE(data == resultData);
 }
@@ -95,7 +95,7 @@ TEST_CASE("IntroSort")
     auto resultData = getSortedData();
 
     IntroSort<int> introSort;
-    introSort.sort(data.begin(),data.end());
+    introSort.sort(data,data.begin(),data.end());
 
     REQUIRE(data == resultData);
 }

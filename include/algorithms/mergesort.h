@@ -7,40 +7,64 @@
 template <typename T>
 class MergeSort
 {
-public:
-    void sort(typename std::vector<T>::iterator start, typename std::vector<T>::iterator end)
+private: 
+    // Funkcja scalająca dwie posortowane części wektora
+    void merge(std::vector<T>& array, typename std::vector<T>::iterator start, typename std::vector<T>::iterator mid, typename std::vector<T>::iterator end)
     {
-        if(std::distance(start, end)<=1)
-            return; // już zostało posortowane
-        auto mid = start + std::distance(start, end)/2; // Znalezienie środka przedziału
-        sort(start, mid); // Sortowanie lewej połowy
-        sort(mid, end); // Sortowanie prawej połowy
-        merge(start, mid, end); // Scalanie posortowanych połówek
+        auto n1 = std::distance(start, mid);
+        auto n2 = std::distance(mid, end);
+
+        std::vector<T> L(start, mid);
+        std::vector<T> R(mid, end);
+
+        for(size_t i=0 ; i < n1; ++i)
+            L[i] = *(start + i);
+        for(size_t j=0 ; j < n2; ++j)
+            R[j] = *(mid + 1 + j);
+
+        size_t i = 0, j = 0;
+        auto k = start;
+
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                *k = L[i];
+                i++;
+            }
+            else {
+                *k = R[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < n1) {
+            *k = L[i];
+            i++;
+            k++;
+        }
+
+        while (j < n2) {
+            *k = R[j];
+            j++;
+            k++;
+        }
+
+    }
+public:
+    void sort(std::vector<T>& array, typename std::vector<T>::iterator start, typename std::vector<T>::iterator end)
+    {
+        if (std::distance(start, end) <= 1)
+            return;
+
+        auto mid = start + std::distance(start, end) / 2;
+
+        sort(array, start, mid);
+        sort(array, mid + 1, end);
+
+        merge(array, start, mid, end);
 
     };
 
-private: 
-    // Funkcja scalająca dwie posortowane części wektora
-    void merge(typename std::vector<T>::iterator start, typename std::vector<T>::iterator mid, typename std::vector<T>::iterator end){
-        std::vector<T> left(start,mid); // Kopiowanie lewej połowy
-        std::vector<T> right(mid,end); // Kopiowanie prawej połowy
 
-        auto itLeft = left.begin(), itRight = right.begin();
-        auto it = start;
-
-        while(itLeft != left.end() && itRight != right.end()){
-            if(*itLeft <= *itRight)
-                *it++ = *itLeft++;
-            else
-                *it++ = *itRight++;
-        }
-        // Dodanie pozostałych elementów z lewej części (jeśli są)
-        while(itLeft!= left.end())
-            *it++ = *itLeft++;
-        // Dodanie pozostałych elementów z prawej części (jeśli są)
-        while(itRight!= right.end())
-            *it++ = *itRight++;
-
-    }
 };
 #endif //SORTING_ALGORITHMS_MERGESORT_H

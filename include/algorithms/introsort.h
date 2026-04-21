@@ -12,7 +12,7 @@ template <typename T>
 class IntroSort
 {
 private:
-    void introsort(typename std::vector<T>::iterator start, typename std::vector<T>::iterator end, int depthLimit)
+    void introsort(std::vector<T>& arr, typename std::vector<T>::iterator start, typename std::vector<T>::iterator end, int depthLimit)
     {
         if (std::distance(start, end) <= 1)
             return;
@@ -28,21 +28,21 @@ private:
         if (depthLimit == 0)
         {
             // Gdy osiągnięto limit rekurencji, użyj sortowania kopcowego
-            HeapSort<int> heapSort;
+            HeapSort<T> heapSort;
             heapSort.sort(start, end);
             return;
         }
 
         // Użyj sortowania szybkiego
-        QuickSort<int> quickSort;
-        quickSort.sort(start,end);
+        QuickSort<T> quickSort;
+        quickSort.sort(arr, std::distance(arr.begin(), start), std::distance(arr.begin(), end) - 1);
     }
 
 public:
-    void sort(typename std::vector<T>::iterator start, typename std::vector<T>::iterator end)
+    void sort(std::vector<T>& arr, typename std::vector<T>::iterator start, typename std::vector<T>::iterator end)
     {
         int depthLimit = 2 * std::log(std::distance(start, end));
-        introsort(start, end, depthLimit);
+        introsort(arr, start, end, depthLimit);
     }
 };
 

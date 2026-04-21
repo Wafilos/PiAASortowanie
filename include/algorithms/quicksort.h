@@ -6,47 +6,53 @@
 #include <stack>
 #include <algorithm>
 #include <random>
+#include <cassert>
 
 template <typename T>
 class QuickSort {
-public:
-    void sort(typename std::vector<T>::iterator begin, typename std::vector<T>::iterator end) {
-        if (begin >= end || std::distance(begin, end) < 2) return;
+private:
+    size_t partition(std::vector<T>& arr, size_t low, size_t high) {
+  
+    // choose the pivot
+    T pivot = arr[high];
+  
+    // undex of smaller element and indicates 
+    // the right position of pivot found so far
+    size_t i = low - 1;
 
-        std::stack<std::pair<decltype(begin), decltype(end)>> stack;
-        stack.push({begin, end});
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
-
-        while (!stack.empty()) {
-            auto [left, right] = stack.top();
-            stack.pop();
-
-            if (std::distance(left, right) < 2) continue;
-
-            // Losowy pivot
-            std::uniform_int_distribution<> dis(0, std::distance(left, right) - 1);
-            auto pivot_it = left + dis(gen);
-            std::iter_swap(pivot_it, right - 1); // przenieś pivot na koniec
-
-            auto pivotValue = *(right - 1);
-            auto i = left;
-
-            for (auto j = left; j < right - 1; ++j) {
-                if (*j < pivotValue) {
-                    std::iter_swap(i, j);
-                    ++i;
-                }
-            }
-            std::iter_swap(i, right - 1); // przenieś pivot na właściwe miejsce
-
-            // Zakresy do posortowania
-            stack.push({left, i});
-            stack.push({i + 1, right});
+    // Traverse arr[low..high] and move all smaller
+    // elements on left side. Elements from low to 
+    // i are smaller after every iteration
+    assert(low >= 0);
+    assert(high >= 0);
+    assert(high < arr.size());
+    for (size_t j = low; j < high - 1; j++) {
+        if (arr[j] < pivot) {
+            i++;
+            std::swap(arr[i], arr[j]);
         }
     }
+    
+    // move pivot after smaller elements and
+    // return its position
+    std::swap(arr[i + 1], arr[high]);  
+    return i + 1;
+}
+public:
+    void sort(std::vector<T>& arr, size_t low, size_t high) {
+        if (low >= high) return;
+
+        size_t pi = partition(arr, low, high);
+
+        if (pi > 0) { // ✅ prevents underflow
+        sort(arr, low, pi - 1);
+        }
+
+        sort(arr, pi + 1, high);
+    }  
 };
+
+
 
 #endif // SORTING_ALGORITHMS_QUICKSORT_H
 
