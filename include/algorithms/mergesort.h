@@ -7,64 +7,75 @@
 template <typename T>
 class MergeSort
 {
-private: 
-    // Funkcja scalająca dwie posortowane części wektora
-    void merge(std::vector<T>& array, typename std::vector<T>::iterator start, typename std::vector<T>::iterator mid, typename std::vector<T>::iterator end)
+private:
+    std::vector<T> tempBuffer;
+    
+    // Optimized merge function that reuses a temporary buffer
+    void merge(std::vector<T>& array, size_t start, size_t mid, size_t end)
     {
-        auto n1 = std::distance(start, mid);
-        auto n2 = std::distance(mid, end);
+        size_t i = start;
+        size_t j = mid + 1;
+        size_t k = start;
 
-        std::vector<T> L(start, mid);
-        std::vector<T> R(mid, end);
+        // Copy elements to temp buffer
+        for (size_t idx = start; idx <= end; ++idx) {
+            tempBuffer[idx] = array[idx];
+        }
 
-        for(size_t i=0 ; i < n1; ++i)
-            L[i] = *(start + i);
-        for(size_t j=0 ; j < n2; ++j)
-            R[j] = *(mid + 1 + j);
+        i = start;
+        j = mid + 1;
+        k = start;
 
-        size_t i = 0, j = 0;
-        auto k = start;
-
-        while (i < n1 && j < n2) {
-            if (L[i] <= R[j]) {
-                *k = L[i];
-                i++;
+        // Merge back into array
+        while (i <= mid && j <= end) {
+            if (tempBuffer[i] <= tempBuffer[j]) {
+                array[k++] = tempBuffer[i++];
+            } else {
+                array[k++] = tempBuffer[j++];
             }
-            else {
-                *k = R[j];
-                j++;
-            }
-            k++;
         }
 
-        while (i < n1) {
-            *k = L[i];
-            i++;
-            k++;
+        // Copy remaining elements
+        while (i <= mid) {
+            array[k++] = tempBuffer[i++];
         }
 
-        while (j < n2) {
-            *k = R[j];
-            j++;
-            k++;
+        while (j <= end) {
+            array[k++] = tempBuffer[j++];
         }
-
     }
+
+    void sortHelper(std::vector<T>& array, size_t start, size_t end)
+    {
+        if (start >= end)
+            return;
+
+        size_t mid = start + (end - start) / 2;
+
+        sortHelper(array, start, mid);
+        sortHelper(array, mid + 1, end);
+
+        merge(array, start, mid, end);
+    }
+
 public:
     void sort(std::vector<T>& array, typename std::vector<T>::iterator start, typename std::vector<T>::iterator end)
     {
         if (std::distance(start, end) <= 1)
             return;
 
-        auto mid = start + std::distance(start, end) / 2;
+        size_t size = std::distance(start, end);
+        size_t startIdx = std::distance(array.begin(), start);
+        size_t endIdx = startIdx + size - 1;
 
-        sort(array, start, mid);
-        sort(array, mid + 1, end);
+        // Allocate temporary buffer once
+        tempBuffer.resize(array.size());
 
-        merge(array, start, mid, end);
+        sortHelper(array, startIdx, endIdx);
 
-    };
-
-
+        tempBuffer.clear();
+        tempBuffer.shrink_to_fit();
+    }
 };
+
 #endif //SORTING_ALGORITHMS_MERGESORT_H
