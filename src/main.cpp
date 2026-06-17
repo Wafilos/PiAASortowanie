@@ -19,14 +19,14 @@ struct BasicsData {
     string titleType;
     string primaryTitle;
     string originalTitle;
-    int isAdult;
-    int startYear;
-    int endYear;
-    int runtimeMinutes;
+    string isAdult;
+    string startYear;
+    string endYear;
+    string runtimeMinutes;
     string genres;
 
-    BasicsData() : isAdult(0), startYear(0), endYear(0), runtimeMinutes(0) {}
-    BasicsData(string tType, string pTitle, string oTitle, int adult, int sYear, int eYear, int runtime, string gen)
+    BasicsData() : isAdult("0"), startYear("0"), endYear("0"), runtimeMinutes("0") {}
+    BasicsData(string tType, string pTitle, string oTitle, string adult, string sYear, string eYear, string runtime, string gen)
         : titleType(tType), primaryTitle(pTitle), originalTitle(oTitle), isAdult(adult), startYear(sYear), endYear(eYear), runtimeMinutes(runtime), genres(gen) {}
 };
 
@@ -62,15 +62,15 @@ struct MergedRecord {
     string titleType;
     string primaryTitle;
     string originalTitle;
-    int isAdult;
-    int startYear;
-    int endYear;
-    int runtimeMinutes;
+    string isAdult;
+    string startYear;
+    string endYear;
+    string runtimeMinutes;
     string genres;
     double averageRating;
     int numVotes;
 
-    MergedRecord() : isAdult(0), startYear(0), endYear(0), runtimeMinutes(0), averageRating(0.0), numVotes(0) {}
+    MergedRecord() : isAdult("0"), startYear("0"), endYear("0"), runtimeMinutes("0"), averageRating(0.0), numVotes(0) {}
 
     // Porównanie oparte na ocenie (malejąco)
     bool operator<(const MergedRecord& other) const {
@@ -350,7 +350,7 @@ int main() {
 
             stringstream ss(line);
             string tconst, titleType, primaryTitle, originalTitle, genresStr;
-            int isAdult, startYear, endYear, runtimeMinutes;
+            string isAdult, startYear, endYear, runtimeMinutes;
 
             if (getline(ss, tconst, '\t') &&
                 getline(ss, titleType, '\t') &&
